@@ -1,6 +1,10 @@
 package scraper
 
 import (
+	"fmt"
+	"log"
+	"net/http"
+
 	"golang.org/x/net/html"
 )
 
@@ -15,4 +19,23 @@ func getHref(t html.Token) (ok bool, href string) {
 		}
 	}
 	return
+}
+
+func Crawl(url string) {
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal("ERROR: Failed to crawl:", url)
+		return
+	}
+	fmt.Println(resp, "GET HTTP Response")
+
+	// Notify that we're done after this function
+	// defer func() {
+	// 	chFinished <- true
+	// }()
+
+	// Close Body when the function completes
+	b := resp.Body
+	fmt.Println(b, "GET RESPONSE BODY")
+	defer b.Close()
 }
